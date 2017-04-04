@@ -8,6 +8,7 @@ from lp_utils import (
     FluentState, encode_state, decode_state,
 )
 from my_planning_graph import PlanningGraph
+import itertools.product # to circumvent built-in nested for loops
 
 
 class AirCargoProblem(Problem):
@@ -58,7 +59,9 @@ class AirCargoProblem(Problem):
             :return: list of Action objects
             '''
             loads = []
-            # TODO create all load ground actions from the domain Load action
+            # create all load ground actions from the domain Load action
+            for c,p,a in itertools.product(self.cargos, self.planes, self.airports):
+
             return loads
 
         def unload_actions():
@@ -76,19 +79,16 @@ class AirCargoProblem(Problem):
             :return: list of Action objects
             '''
             flys = []
-            for fr in self.airports:
-                for to in self.airports:
-                    if fr != to:
-                        for p in self.planes:
-                            precond_pos = [expr("At({}, {})".format(p, fr)),
-                                           ]
-                            precond_neg = []
-                            effect_add = [expr("At({}, {})".format(p, to))]
-                            effect_rem = [expr("At({}, {})".format(p, fr))]
-                            fly = Action(expr("Fly({}, {}, {})".format(p, fr, to)),
-                                         [precond_pos, precond_neg],
-                                         [effect_add, effect_rem])
-                            flys.append(fly)
+            for origin, destination, p in itertools.product(self.airports, self.airports, self.planes):
+                if origin != destination: 
+                    precond_pos = [expr("At({}, {})".format(p, origin)),]
+                    precond_neg = []
+                    effect_add = [expr("At({}, {})".format(p, destination))]
+                    effect_rem = [expr("At({}, {})".format(p, origin))]
+                    fly = Action(expr("Fly({}, {}, {})".format(p, origin, destination)),
+                                 [precond_pos, precond_neg],
+                                 [effect_add, effect_rem])
+                    flys.append(fly)
             return flys
 
         return load_actions() + unload_actions() + fly_actions()
