@@ -60,7 +60,7 @@ class AirCargoProblem(Problem):
             '''
             loads = []
             for c,p,a in itertools.product(self.cargos, self.planes, self.airports):
-                precond_pos = [expr("At({}, {})".format(c, p)),
+                precond_pos = [expr("At({}, {})".format(p, a)),
                                expr("At({}, {})".format(c, a))]
                 precond_neg = []
                 effect_add = [expr("In({}, {})".format(c, p))]
@@ -309,4 +309,4 @@ def air_cargo_p3() -> AirCargoProblem:
             expr('At(C3, JFK)'),
             expr('At(C4, SFO)'),
             ]
-    return AirCargoProblem(cargos, planes, airports, init, goal)
+    return AirCargoProblem(cargos, planes, airports, init, goal)    
