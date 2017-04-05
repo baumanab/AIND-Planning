@@ -8,7 +8,7 @@ from lp_utils import (
     FluentState, encode_state, decode_state,
 )
 from my_planning_graph import PlanningGraph
-import itertools.product # to circumvent built-in nested for loops
+import itertools # to circumvent built-in nested for loops
 
 
 class AirCargoProblem(Problem):
@@ -65,7 +65,7 @@ class AirCargoProblem(Problem):
                 precond_neg = []
                 effect_add = [expr("In({}, {})".format(c, p))]
                 effect_rem = [expr("At({}, {})".format(c, a))]
-                load= Action(expr("Load({}, {}, {}".format(c, p, a)),
+                load= Action(expr("Load({}, {}, {})".format(c, p, a)),
                               [precond_pos, precond_neg],
                               [effect_add, effect_rem])
                 loads.append(load)     
@@ -83,7 +83,7 @@ class AirCargoProblem(Problem):
                 precond_neg = []
                 effect_add = [expr("At({}, {})".format(c, a))]
                 effect_rem = [expr("In({}, {})".format(c, p))]
-                unload= Action(expr("Unload({}, {}, {}".format(c, p, a)),
+                unload= Action(expr("Unload({}, {}, {})".format(c, p, a)),
                               [precond_pos, precond_neg],
                               [effect_add, effect_rem])
                 unloads.append(unload)     
@@ -309,3 +309,4 @@ def air_cargo_p3() -> AirCargoProblem:
             expr('At(C3, JFK)'),
             expr('At(C4, SFO)'),
             ]
+    return AirCargoProblem(cargos, planes, airports, init, goal)
