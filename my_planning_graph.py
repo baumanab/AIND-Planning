@@ -518,11 +518,14 @@ class PlanningGraph():
         :return: bool
         '''
         for precond_s1, precond_s2 in itertools.product(node_s1.parents, node_s2.parents):
-           if precond_s1.is_mutex(precond_s2):
-               return True
+           # parents in this case represent precondtion actions
+           # if even one of them is possible we can proceed so we are looking for
+           # the case where one is not mutex 
+           if not precond_s1.is_mutex(precond_s2):
+               return False # not mutex if even one item is not mutex
                
         
-        return False
+        return True # is mutex if all actions are mutex
 
     def h_levelsum(self) -> int:
         '''The sum of the level costs of the individual goals (admissible if goals independent)
