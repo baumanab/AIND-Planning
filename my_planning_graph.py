@@ -532,7 +532,22 @@ class PlanningGraph():
 
         :return: int
         '''
+        # from https://discussions.udacity.com/t/understand-level-sum-heuristic/225706/3
+        # For each goal determine which level is the first level where a goal appears
+        # add up the level numbers.
+        # Example: if have 2 goals one at level 4 and one at level 3, levelsum= 7
+        # another great thread on this https://discussions.udacity.com/t/same-levelsum-code-for-have-cake-and-air-cargo/236759
+        
         level_sum = 0
-        # TODO implement
         # for each goal in the problem, determine the level cost, then add them together
+        for goal in self.problem.goal:
+            found_goal= False
+            for level, states in enumerate(self.s_levels):
+                if {goal}.issubset([state.literal for state in states]):
+                    found_goal= True
+                    level_sum += level
+                    break # we can stop looking
         return level_sum
+                                
+            
+        

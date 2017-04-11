@@ -195,8 +195,27 @@ class AirCargoProblem(Problem):
         executed.
         '''
         # TODO implement (see Russell-Norvig Ed-3 10.2.3  or Russell-Norvig Ed-2 11.2)
-        count = 0
+        # each goal state takes a minimum of one action to achieve if precon ignored
+        # each time a goal state is satisfied we have one less action. So, for example
+        # if we have the goals: {C1 @ SFO, C2 @ JFK} and the precons that the cargos
+        # has to be in the P1 and P2 and that P1 & P2 need to be at SFO and JFK
+        # then the only thing left to achieve the goal state is to unload.
+        # after C1 OR C2 have been unloaded we can reduce our count to 1
+        # so that path will likely be chosen over a path that leads to a count
+        # greater than 1
+               
+        # count goals
+        count= len(self.goal)
+        
+        kb = PropKB()
+        kb.tell(decode_state(node.state, self.state_map).pos_sentence())
+        # iterate through each clauses and decrement one for each state that has 
+        # satisfied a goal
+        for clause in self.goal:
+            if clause in kb.clauses:
+                count -= 1
         return count
+        
 
 
 def air_cargo_p1() -> AirCargoProblem:
