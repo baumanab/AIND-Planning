@@ -541,10 +541,8 @@ class PlanningGraph():
         level_sum = 0
         # for each goal in the problem, determine the level cost, then add them together
         for goal in self.problem.goal:
-            found_goal= False
             for level, states in enumerate(self.s_levels):
                 if {goal}.issubset([state.literal for state in states]):
-                    found_goal= True
                     level_sum += level
                     break # we can stop looking
         return level_sum
